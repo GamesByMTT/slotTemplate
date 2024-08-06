@@ -1,0 +1,43 @@
+# This .gitignore file should be placed at the root of your Unity project directory.
+
+# Ignore hidden files and folders.
+.*
+!/.gitignore
+
+# Ignore temp and build files
+[Tt]emp/
+[Bb]uild/
+[Bb]uilds/
+[Ll]ibrary/
+[Oo]bj/
+[Bb]in/
+[Ll]ogs/
+[Uu]serSettings/
+Assets/AssetStoreTools*
+
+# Ignore auto-generated Visual Studio files
+.vscode/
+*.csproj
+*.unityproj
+*.sln
+*.suo
+*.tmp
+*.user
+*.userprefs
+*.pidb
+*.booproj
+*.svd
+
+# Ignore OS-specific files
+.DS_Store
+Thumbs.db
+Desktop.ini
+
+# Ignore files created by JetBrains Rider
+.idea/
+.idea/
+
+# Ignore localization files
+*.bak
+*.swp
+*.backup
