@@ -6,8 +6,7 @@ using Newtonsoft.Json;
 
 internal class SocketModel
 {
-    // public Root root;
-    // public GameData gameData;
+
     public PlayerData PlayerData;
     public UIData UIdata;
 
@@ -15,6 +14,7 @@ internal class SocketModel
 
     public ResultGameData resultGameData;
 
+    public int currentBetIndex=0;
     internal SocketModel(){
 
         this.PlayerData= new PlayerData();
@@ -41,7 +41,7 @@ public class InitGameData
 [Serializable]
 public class ResultGameData
 {
-    public List<List<string>> ResultReel { get; set; }
+    public List<List<int>> ResultReel { get; set; }
     public List<int> linesToEmit { get; set; }
     public List<List<string>> symbolsToEmit { get; set; }
     public double WinAmout { get; set; }
@@ -79,25 +79,24 @@ public class Symbol
 {
     public int ID { get; set; }
     public string Name { get; set; }
+
     [JsonProperty("multiplier")]
     public object MultiplierObject { get; set; }
 
-    // This property will hold the properly deserialized list of lists of integers
     [JsonIgnore]
-    public List<List<int>> Multiplier { get; private set; }
+    public List<List<int>> Multiplier { get; set; }
 
-    // Custom deserialization method to handle the conversion
     [OnDeserialized]
     internal void OnDeserializedMethod(StreamingContext context)
     {
-        // Handle the case where multiplier is an object (empty in JSON)
+ 
         if (MultiplierObject is JObject)
         {
             Multiplier = new List<List<int>>();
         }
         else
         {
-            // Deserialize normally assuming it's an array of arrays
+
             Multiplier = JsonConvert.DeserializeObject<List<List<int>>>(MultiplierObject.ToString());
         }
     }
@@ -107,18 +106,6 @@ public class Symbol
     public int freeSpin { get; set; }
 }
 
-// public class Message
-// {
-//     public GameData GameData { get; set; }
-//     public PlayerData PlayerData { get; set; }
-//     public UIData UIData { get; set; }
-//     public string Username { get; set; }
-// }
 
-// [Serializable]
-// public class Root
-// {
-//     public string Id { get; set; }
-//     public Message Message { get; set; }
-// }
+
 
