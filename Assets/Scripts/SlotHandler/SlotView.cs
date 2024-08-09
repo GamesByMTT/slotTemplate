@@ -2,7 +2,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Newtonsoft.Json;
+using UnityEditor;
 using UnityEngine;
+using UnityEngine.U2D;
 using UnityEngine.UI;
 using UnityEngine.UI.Extensions;
 
@@ -11,9 +13,9 @@ public class SlotView : MonoBehaviour
     [Header("slots")]
     [SerializeField] private Transform[] slots;
     [SerializeField] private GameObject IconPrefab;
-    [SerializeField] private Sprite[] spriteList;
+    [SerializeField] private SpriteAtlas spriteAtlas;
     [SerializeField] private List<Reel> resultMatrix = new List<Reel>(3);
-    [SerializeField] internal List<Icon> animatedIcons= new List<Icon>();
+    [SerializeField] internal List<Icon> animatedIcons = new List<Icon>();
     [SerializeField] private SlotController slotController;
     [SerializeField] private Vector2 iconSize;
     [SerializeField] private float spacing = 30;
@@ -27,71 +29,75 @@ public class SlotView : MonoBehaviour
     [SerializeField] private int y_Distance;
     [SerializeField] private List<GameObject> wininglines;
 
-    [Header("sprite animation")]
-    [SerializeField] private Sprite[] symbol0SpriteList;
-    [SerializeField] private Sprite[] symbol1SpriteList;
-    [SerializeField] private Sprite[] symbol2SpriteList;
-    [SerializeField] private Sprite[] symbol3SpriteList;
-    [SerializeField] private Sprite[] symbol4SpriteList;
-    [SerializeField] private Sprite[] symbol5SpriteList;
-    [SerializeField] private Sprite[] symbol6SpriteList;
-    [SerializeField] private Sprite[] symbol7SpriteList;
-    [SerializeField] private Sprite[] symbol8SpriteList;
-    [SerializeField] private Sprite[] symbol9SpriteList;
-    [SerializeField] private Sprite[] symbol10SpriteList;
-    [SerializeField] private Sprite[] symbol11SpriteList;
-    [SerializeField] private Sprite[] symbol12SpriteList;
-    [SerializeField] private Sprite[] symbol13SpriteList;
-
-    internal void PopulateReels(List<List<int>> iconsId = null)
+        [Header("sprite animation")]
+    [SerializeField] private SpriteAtlas symbol0Atlas;
+    [SerializeField] private SpriteAtlas symbol1Atlas;
+    [SerializeField] private SpriteAtlas symbol2Atlas;
+    [SerializeField] private SpriteAtlas symbol3Atlas;
+    [SerializeField] private SpriteAtlas symbol4Atlas;
+    [SerializeField] private SpriteAtlas symbol5Atlas;
+    [SerializeField] private SpriteAtlas symbol6Atlas;
+    [SerializeField] private SpriteAtlas symbol7Atlas;
+    [SerializeField] private SpriteAtlas symbol8Atlas;
+    [SerializeField] private SpriteAtlas symbol9Atlas;
+    [SerializeField] private SpriteAtlas symbol10Atlas;
+    [SerializeField] private SpriteAtlas symbol11Atlas;
+    [SerializeField] private SpriteAtlas symbol12Atlas;
+    [SerializeField] private SpriteAtlas symbol13Atlas;
+    internal void PopulateReels()
     {//TODO : CHane Naming Conventions
         clearLine();
 
-        if (iconsId != null)
-        {
-            for (int i = 0; i < slotMatrix.x; i++)
-            {
-                PopulateRow(i, iconsId[iconsId.Count - i - 1]);
 
-            }
-        }
-        else
+        for (int i = 0; i < 3; i++)
         {
-
-            for (int i = 0; i < 4; i++)
-            {
-                PopulateRow(i);
-            }
+            PopulateRow(i);
         }
 
     }
 
+    internal void PopulateReels(List<List<int>> iconsId)
+    {//TODO : CHane Naming Conventions
+        clearLine();
 
-    void PopulateRow(int index, List<int> Ids = null)
+
+        for (int i = 0; i < slotMatrix.x; i++)
+        {
+            PopulateRow(i, iconsId[iconsId.Count - i - 1]);
+
+        }
+
+
+    }
+
+
+    void PopulateRow(int index)
     {
         for (int i = 0; i < slotMatrix.y; i++)
         {
-            if (Ids != null)
-            {
-                // int id = int.Parse(Ids[i]);
-                Debug.Log("triggered");
-                resultMatrix[(int)slotMatrix.x - 1 - index].reelIcons[i].image.sprite = spriteList[Ids[i]];
-                resultMatrix[(int)slotMatrix.x - 1 - index].reelIcons[i].id = Ids[i];
-                Debug.Log("Result :" + resultMatrix[(int)slotMatrix.x - 1 - index]);
-            }
-            else
-            {
-
-                Image image = Instantiate(IconPrefab, slots[i]).GetComponent<Image>();
-                ImageAnimation imageAnimation = image.GetComponent<ImageAnimation>();
-                int id = UnityEngine.Random.Range(0, spriteList.Length);
-                image.sprite = spriteList[id];
-                Icon icon = new Icon(image, id, imageAnimation);
-                Debug.Log("ICONS : " + i + "," + index);
-                if(index<(int)slotMatrix.x)
+            Image image = Instantiate(IconPrefab, slots[i]).GetComponent<Image>();
+            ImageAnimation imageAnimation = image.GetComponent<ImageAnimation>();
+            int id = UnityEngine.Random.Range(0, spriteAtlas.spriteCount);
+            image.sprite = spriteAtlas.GetSprite(id.ToString());
+            Icon icon = new Icon(image, id, imageAnimation);
+            Debug.Log("ICONS : " + i + "," + index);
+            if (index < (int)slotMatrix.x)
                 resultMatrix[(int)slotMatrix.x - 1 - index].reelIcons.Add(icon);
-                icon.image.transform.localPosition = new Vector3(0, (iconSize.y + spacing) * index, 0);
-            }
+            icon.image.transform.localPosition = new Vector3(0, (iconSize.y + spacing) * index, 0);
+
+        }
+    }
+
+    void PopulateRow(int index, List<int> Ids)
+    {
+        for (int i = 0; i < slotMatrix.y; i++)
+        {
+
+            // int id = int.Parse(Ids[i]);
+            resultMatrix[(int)slotMatrix.x - 1 - index].reelIcons[i].image.sprite = spriteAtlas.GetSprite(Ids[i].ToString());
+            resultMatrix[(int)slotMatrix.x - 1 - index].reelIcons[i].id = Ids[i];
+
+
         }
     }
 
@@ -104,19 +110,17 @@ public class SlotView : MonoBehaviour
             wininglines.Add(lineObj);
             lineObj.transform.localPosition = new Vector2(InitialLinePosition.x, InitialLinePosition.y);
             UILineRenderer line = lineObj.GetComponent<UILineRenderer>();
+            var pointlist = new List<Vector2>();
             for (int j = 0; j < y_index[lineIndexs[i]].Count; j++)
             {
                 var points = new Vector2() { x = j * x_Distance, y = y_index[lineIndexs[i]][j] * -y_Distance };
-                var pointlist = new List<Vector2>(line.Points);
                 pointlist.Add(points);
-                line.Points = pointlist.ToArray();
             }//TODO : Make it Seperate
-            var newpointlist = new List<Vector2>(line.Points);
-            newpointlist.RemoveAt(0);
-            line.Points = newpointlist.ToArray();
+            line.Points = pointlist.ToArray();
         }
 
     }
+
 
     void clearLine()
     {
@@ -137,6 +141,7 @@ public class SlotView : MonoBehaviour
                 flatList.Add(str);
             }
         }
+
         Debug.Log("pos :" + JsonConvert.SerializeObject(flatList));
 
         for (int i = 0; i < flatList.Count; i++)
@@ -144,37 +149,68 @@ public class SlotView : MonoBehaviour
             string[] numbers = flatList[i].Split(',');
             var symbol = resultMatrix[int.Parse(numbers[1])].reelIcons[int.Parse(numbers[0])];
             int id = symbol.id;
-            Sprite[] animations = GetSpriteList(id);
-            symbol.StartAnimation(animations);
+            // Sprite[] animations = GetSpriteList(id);
+            // Debug.Log("animation list "+animations.Length);
+            symbol.StartAnimation(GetSpriteList(id));
             animatedIcons.Add(symbol);
         }
 
     }
 
 
-    private Sprite[] GetSpriteList(int id)
+    // private Sprite[] GetSpriteList(int id)
+    // {
+    //     switch (id)
+    //     {
+    //         case 0: return symbol0SpriteList;
+    //         case 1: return symbol1SpriteList;
+    //         case 2: return symbol2SpriteList;
+    //         case 3: return symbol3SpriteList;
+    //         case 4: return symbol4SpriteList;
+    //         case 5: return symbol5SpriteList;
+    //         case 6: return symbol6SpriteList;
+    //         case 7: return symbol7SpriteList;
+    //         case 8: return symbol8SpriteList;
+    //         case 9: return symbol9SpriteList;
+    //         case 10: return symbol10SpriteList;
+    //         case 11: return symbol11SpriteList;
+    //         case 12: return symbol12SpriteList;
+    //         case 13: return symbol13SpriteList;
+    //         default: return new Sprite[0];
+    //     }
+    // }
+private Sprite[] GetSpriteList(int id)
+{
+    SpriteAtlas atlas= new SpriteAtlas();
+
+    switch (id)
     {
-        switch (id)
-        {
-            case 0: return symbol0SpriteList;
-            case 1: return symbol1SpriteList;
-            case 2: return symbol2SpriteList;
-            case 3: return symbol3SpriteList;
-            case 4: return symbol4SpriteList;
-            case 5: return symbol5SpriteList;
-            case 6: return symbol6SpriteList;
-            case 7: return symbol7SpriteList;
-            case 8: return symbol8SpriteList;
-            case 9: return symbol9SpriteList;
-            case 10: return symbol10SpriteList;
-            case 11: return symbol11SpriteList;
-            case 12: return symbol12SpriteList;
-            case 13: return symbol13SpriteList;
-            default:
-                Debug.LogError("ID out of range.");
-                return null;
-        }
+        case 0: atlas = symbol0Atlas; break;
+        case 1: atlas = symbol1Atlas; break;
+        case 2: atlas = symbol2Atlas; break;
+        case 3: atlas = symbol3Atlas; break;
+        case 4: atlas = symbol4Atlas; break;
+        case 5: atlas = symbol5Atlas; break;
+        case 6: atlas = symbol6Atlas; break;
+        case 7: atlas = symbol7Atlas; break;
+        case 8: atlas = symbol8Atlas; break;
+        case 9: atlas = symbol9Atlas; break;
+        case 10: atlas = symbol10Atlas; break;
+        case 11: atlas = symbol11Atlas; break;
+        case 12: atlas = symbol12Atlas; break;
+        case 13: atlas = symbol13Atlas; break;
     }
+
+    if (atlas == null)
+    {
+        return new Sprite[0];
+    }
+
+    Sprite[] sprites = new Sprite[atlas.spriteCount];
+    atlas.GetSprites(sprites);
+    Array.Sort(sprites, (sprite1, sprite2) => string.Compare(sprite1.name, sprite2.name));
+    return sprites;
+}
 
 }
 

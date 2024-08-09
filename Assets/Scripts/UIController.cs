@@ -4,10 +4,10 @@ using UnityEngine.UI;
 using TMPro;
 public class UIController : MonoBehaviour
 {
-    [SerializeField] private Button spinButton;
-    [SerializeField] private Button lineBetButton;
-    [SerializeField] private Button autoSpinButton;
-    [SerializeField] private TMP_Text autoSpinInput;
+    [SerializeField] internal Button spinButton;
+    [SerializeField] internal Button lineBetButton;
+    [SerializeField] internal Button autoSpinButton;
+    [SerializeField] internal TMP_Text autoSpinInput;
     [SerializeField] private TMP_InputField autoSpinInputField;
 
     [Header("BetInfo")]
@@ -21,54 +21,48 @@ public class UIController : MonoBehaviour
 
 
 
-    internal void UpdateBetLineInfo(int linetextDefalut, double betTextDefault){
-        linesText.text=linetextDefalut.ToString();
-        betPerLineText.text=betTextDefault.ToString();
-        totalBetText.text=(linetextDefalut*betTextDefault).ToString();
-    }
-    internal void OnspinBinder(Action action)
+    internal void UpdateBetLineInfo(int linetextDefalut, double betTextDefault)
     {
-        spinButton.onClick.RemoveAllListeners();
-        spinButton.onClick.AddListener(delegate { action(); });
+        linesText.text = linetextDefalut.ToString();
+        betPerLineText.text = betTextDefault.ToString();
+        totalBetText.text = (linetextDefalut * betTextDefault).ToString();
     }
 
-    internal void UpdatePlayerData(PlayerData playerData){
 
-        playerBalance.text=playerData.Balance.ToString();
-        playerCurrentWining.text=playerData.CurrentWining.ToString();
+    internal void UpdatePlayerData(PlayerData playerData)
+    {
+
+        playerBalance.text = playerData.Balance.ToString();
+        playerCurrentWining.text = playerData.CurrentWining.ToString();
 
     }
 
-    internal void OnlinebetBinder(Func<double> action){
+    internal void RemoveButtonListeners(){
         lineBetButton.onClick.RemoveAllListeners();
-        lineBetButton.onClick.AddListener(delegate{   
-            
-            UpdateBetLineInfo(20,action());
-            Debug.Log("OnlinebetBinder");
-        
-        });
-
-    }
-
-    internal void OnAutoSpinBinder(Action action){
-
+        spinButton.onClick.RemoveAllListeners();
         autoSpinButton.onClick.RemoveAllListeners();
-        autoSpinButton.onClick.AddListener(delegate{ 
 
-            action();
-        });
     }
 
-    internal void ToggleButtons(bool toggle){
 
-    spinButton.interactable=toggle;
-    lineBetButton.interactable=toggle;
-    autoSpinButton.interactable=toggle;
-    autoSpinInputField.interactable=toggle;
+ 
+
+    internal void ToggleButtons(bool toggle)
+    {
+
+        spinButton.interactable = toggle;
+        lineBetButton.interactable = toggle;
+        autoSpinButton.interactable = toggle;
+        autoSpinInputField.interactable = toggle;
     }
     internal void UpdateLines(string text)
     {
 
-        linesText.text=text;
+        linesText.text = text;
+    }
+
+    internal void UpdateBetLineInfo(int v, Func<double> changeLineBet)
+    {
+        throw new NotImplementedException();
     }
 }

@@ -9,9 +9,9 @@ public class GameManager : MonoBehaviour
     [SerializeField] private SocketController socketController;
     [SerializeField] private SlotController slotController;
     [SerializeField] private UIController uIController;
-    [SerializeField] private int autoSpinCount=5;
+    [SerializeField] private int autoSpinCount = 5;
 
-    
+
     [SerializeField] private float delayTime = 2f;
     void Awake()
     {
@@ -20,9 +20,15 @@ public class GameManager : MonoBehaviour
 
     void OnInit()
     {
-        uIController.OnspinBinder(OnSpinStart);
-        uIController.OnlinebetBinder(socketController.ChangeLineBet);
-        uIController.OnAutoSpinBinder(()=>{OnSpinStart();});
+        uIController.RemoveButtonListeners();
+
+        uIController.spinButton.onClick.AddListener(delegate { OnSpinStart(); });
+
+        uIController.lineBetButton.onClick.AddListener(delegate {uIController.UpdateBetLineInfo(20, socketController.ChangeLineBet());});
+
+
+        uIController.autoSpinButton.onClick.AddListener(delegate {Debug.Log( uIController.autoSpinInput.text.GetType()); int count = int.Parse(uIController.autoSpinInput.text.Trim());  autoSpinCount = count;  OnSpinStart(); });
+
         uIController.UpdateBetLineInfo(socketController.socketModel.initGameData.Lines.Count, socketController.socketModel.initGameData.Bets[0]);
         uIController.UpdatePlayerData(socketController.socketModel.PlayerData);
     }
@@ -35,6 +41,7 @@ public class GameManager : MonoBehaviour
         }
     }
 
+
     void OnSpinStart()
     {
         var spinData = new { Data = new { currentBet = socketController.socketModel.currentBetIndex, currentLines = 20, spins = 1 }, id = "SPIN" };
@@ -43,19 +50,19 @@ public class GameManager : MonoBehaviour
         uIController.ToggleButtons(false);
         slotController.DepopulateAnimation();
         if (autoSpinCount > 0)
-        autoSpinCount --;
+            autoSpinCount--;
     }
 
     async void OnSpinEnd()
     {
         bool isMatched = slotController.PopulateSLot(socketController.socketModel.resultGameData, socketController.socketModel.initGameData);
         uIController.UpdatePlayerData(socketController.socketModel.PlayerData);
-    
+
         if (autoSpinCount > 0)
         {
-            Debug.Log("AutoSpinCount : "+autoSpinCount);
-            if(isMatched)
-            delayTime = 3f;
+            Debug.Log("AutoSpinCount : " + autoSpinCount);
+            if (isMatched)
+                delayTime = 3f;
 
             await Task.Delay(TimeSpan.FromSeconds(delayTime));
             OnSpinStart();
@@ -64,10 +71,10 @@ public class GameManager : MonoBehaviour
         }
         uIController.ToggleButtons(true);
 
-      
+
 
     }
 
-  
+
 
 }

@@ -140,7 +140,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 2147483647
   m_IsActive: 1
 --- !u!224 &22816911
 RectTransform:
@@ -260,7 +260,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 2147483647
   m_IsActive: 1
 --- !u!224 &37488396
 RectTransform:
@@ -394,7 +394,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 2147483647
   m_IsActive: 1
 --- !u!224 &46902800
 RectTransform:
@@ -563,10 +563,12 @@ MonoBehaviour:
   - {fileID: 21300000, guid: 76050b628489742ea9d912dec7ebc0b1, type: 3}
   - {fileID: 21300000, guid: 7bf696512ca9d4a3d8612a35aa9caf1f, type: 3}
   - {fileID: 21300000, guid: ced0261dfd25c4394b03ca7b4627796f, type: 3}
+  spriteAtlas: {fileID: 100100200, guid: e8bd5e7a6365a4ca0a18dd5b15cc73d7, type: 3}
   resultMatrix:
   - reelIcons: []
   - reelIcons: []
   - reelIcons: []
+  animatedIcons: []
   slotController: {fileID: 1929074044}
   iconSize: {x: 150, y: 200}
   spacing: 10
@@ -987,6 +989,20 @@ MonoBehaviour:
   - {fileID: 21300000, guid: 13d9ff0dd9fe44c809c1a09a821204b4, type: 3}
   - {fileID: 21300000, guid: 51371c59c1d054e0eac44a373a05b474, type: 3}
   - {fileID: 21300000, guid: 232117f831f6440229b02e22ba08fecb, type: 3}
+  symbol0Atlas: {fileID: 100100200, guid: c431c635b024f415eb208becceafa015, type: 3}
+  symbol1Atlas: {fileID: 100100200, guid: 31a2f5757cdf748aa9e2a0be9b123c98, type: 3}
+  symbol2Atlas: {fileID: 100100200, guid: 3305574669efb4dd6823b91f5c868fa6, type: 3}
+  symbol3Atlas: {fileID: 100100200, guid: 12729f22a53934528861b9d0038cc2e6, type: 3}
+  symbol4Atlas: {fileID: 100100200, guid: 2a026ed8dd61344c58b141baba895bea, type: 3}
+  symbol5Atlas: {fileID: 100100200, guid: 16755cf5dddd24048893d33c6d6c8f71, type: 3}
+  symbol6Atlas: {fileID: 100100200, guid: fca6a2ebd64e44fad8dc8030b99909a0, type: 3}
+  symbol7Atlas: {fileID: 100100200, guid: b2c36e6e4a16b489287b76dfc4070972, type: 3}
+  symbol8Atlas: {fileID: 100100200, guid: 300b74fc578664a75b5d428575ccf90f, type: 3}
+  symbol9Atlas: {fileID: 100100200, guid: da8e9c9bc0f564c83b1e267e04bee99e, type: 3}
+  symbol10Atlas: {fileID: 100100200, guid: 7060f4aab2e884c06b4c9af4784a22ea, type: 3}
+  symbol11Atlas: {fileID: 100100200, guid: dc804af843d7943af9470938a3385f20, type: 3}
+  symbol12Atlas: {fileID: 100100200, guid: 198bf8a9a61d8467b95102948666ebc7, type: 3}
+  symbol13Atlas: {fileID: 100100200, guid: 81e6e407979734d3aac7b6665228073d, type: 3}
 --- !u!4 &84469295
 Transform:
   m_ObjectHideFlags: 0
@@ -1063,7 +1079,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 2147483647
   m_IsActive: 1
 --- !u!224 &187180223
 RectTransform:
@@ -1244,7 +1260,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 2147483647
   m_IsActive: 1
 --- !u!224 &517686083
 RectTransform:
@@ -1378,7 +1394,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 2147483647
   m_IsActive: 1
 --- !u!224 &600257868
 RectTransform:
@@ -1510,7 +1526,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 2147483647
   m_IsActive: 1
 --- !u!224 &602482508
 RectTransform:
@@ -1727,7 +1743,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 2147483647
   m_IsActive: 1
 --- !u!224 &723714391
 RectTransform:
@@ -1861,7 +1877,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 2147483647
   m_IsActive: 1
 --- !u!114 &733413876
 MonoBehaviour:
@@ -1995,7 +2011,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 2147483647
   m_IsActive: 1
 --- !u!224 &780488000
 RectTransform:
@@ -2129,7 +2145,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 2147483647
   m_IsActive: 1
 --- !u!224 &809631786
 RectTransform:
@@ -2263,7 +2279,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 2147483647
   m_IsActive: 1
 --- !u!224 &811466095
 RectTransform:
@@ -2395,7 +2411,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 2147483647
   m_IsActive: 1
 --- !u!224 &986090918
 RectTransform:
@@ -2500,7 +2516,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 2147483647
   m_IsActive: 1
 --- !u!224 &1130226386
 RectTransform:
@@ -2743,7 +2759,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 2147483647
   m_IsActive: 1
 --- !u!224 &1310720344
 RectTransform:
@@ -2877,7 +2893,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 2147483647
   m_IsActive: 1
 --- !u!224 &1514200747
 RectTransform:
@@ -2916,7 +2932,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 2147483647
   m_IsActive: 1
 --- !u!224 &1562547638
 RectTransform:
@@ -3051,7 +3067,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 2147483647
   m_IsActive: 1
 --- !u!114 &1599097935
 MonoBehaviour:
@@ -3160,7 +3176,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 2147483647
   m_IsActive: 1
 --- !u!224 &1796380056
 RectTransform:
@@ -3355,7 +3371,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 2147483647
   m_IsActive: 1
 --- !u!224 &1869006148
 RectTransform:
@@ -3564,7 +3580,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 2147483647
   m_IsActive: 1
 --- !u!224 &1912778789
 RectTransform:
@@ -3699,7 +3715,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 2147483647
   m_IsActive: 1
 --- !u!224 &1922205723
 RectTransform:
@@ -3867,7 +3883,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 2147483647
   m_IsActive: 1
 --- !u!224 &1935322291
 RectTransform:
@@ -3937,14 +3953,14 @@ MonoBehaviour:
   m_VerticalScrollbarEventHandler: {fileID: 0}
   m_LayoutGroup: {fileID: 0}
   m_ScrollSensitivity: 1
-  m_ContentType: 0
+  m_ContentType: 2
   m_InputType: 0
   m_AsteriskChar: 42
-  m_KeyboardType: 0
+  m_KeyboardType: 4
   m_LineType: 0
   m_HideMobileInput: 0
   m_HideSoftKeyboard: 0
-  m_CharacterValidation: 0
+  m_CharacterValidation: 2
   m_RegexValue: 
   m_GlobalPointSize: 14
   m_CharacterLimit: 0
@@ -4039,7 +4055,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 2147483647
   m_IsActive: 1
 --- !u!224 &1997588850
 RectTransform:
