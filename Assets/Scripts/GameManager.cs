@@ -1,9 +1,7 @@
 using System;
-using System.Collections;
 using System.Threading.Tasks;
 using UnityEngine;
 using Newtonsoft.Json;
-
 public class GameManager : MonoBehaviour
 {
     [SerializeField] private SocketController socketController;
@@ -13,12 +11,17 @@ public class GameManager : MonoBehaviour
 
 
     [SerializeField] private float delayTime = 2f;
-    void Awake()
+    void Start()
     {
+        // Start the coroutine to manage the initiation
+        // StartCoroutine(InitializeSocketCoroutine());
         socketController.InitiateSocket(OnInit, OnSpinEnd);
+
     }
 
-    void OnInit()
+
+
+    internal void OnInit()
     {
         uIController.RemoveButtonListeners();
 
@@ -27,7 +30,7 @@ public class GameManager : MonoBehaviour
         uIController.lineBetButton.onClick.AddListener(delegate {uIController.UpdateBetLineInfo(20, socketController.ChangeLineBet());});
 
 
-        uIController.autoSpinButton.onClick.AddListener(delegate {Debug.Log( uIController.autoSpinInput.text.GetType()); int count = int.Parse(uIController.autoSpinInput.text.Trim());  autoSpinCount = count;  OnSpinStart(); });
+        uIController.autoSpinButton.onClick.AddListener(delegate {  OnSpinStart(); });
 
         uIController.UpdateBetLineInfo(socketController.socketModel.initGameData.Lines.Count, socketController.socketModel.initGameData.Bets[0]);
         uIController.UpdatePlayerData(socketController.socketModel.PlayerData);
@@ -44,17 +47,20 @@ public class GameManager : MonoBehaviour
 
     void OnSpinStart()
     {
-        var spinData = new { Data = new { currentBet = socketController.socketModel.currentBetIndex, currentLines = 20, spins = 1 }, id = "SPIN" };
+        var spinData = new { data = new { currentBet = socketController.socketModel.currentBetIndex, currentLines = 20, spins = 1 }, id = "SPIN" };
         string spinJson = JsonConvert.SerializeObject(spinData);
         socketController.SendData(spinJson);
         uIController.ToggleButtons(false);
         slotController.DepopulateAnimation();
+        slotController.KillAllTween();
+        slotController.StartSpinAnimation();
         if (autoSpinCount > 0)
             autoSpinCount--;
     }
 
-    async void OnSpinEnd()
+    internal async void OnSpinEnd()
     {
+        await Task.Delay(TimeSpan.FromSeconds(1f));
         bool isMatched = slotController.PopulateSLot(socketController.socketModel.resultGameData, socketController.socketModel.initGameData);
         uIController.UpdatePlayerData(socketController.socketModel.PlayerData);
 
@@ -67,8 +73,10 @@ public class GameManager : MonoBehaviour
             await Task.Delay(TimeSpan.FromSeconds(delayTime));
             OnSpinStart();
             delayTime = 3f;
+
             return;
         }
+
         uIController.ToggleButtons(true);
 
 

@@ -69,9 +69,8 @@ MonoBehaviour:
   m_improveResolution: 0
   m_Resolution: 0
   m_useNativeSize: 0
-  m_points:
-  - {x: 0, y: 0}
-  lineThickness: 5
+  m_points: []
+  lineThickness: 7
   relativeSize: 0
   lineList: 0
   lineCaps: 0

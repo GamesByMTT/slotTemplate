@@ -30,7 +30,7 @@ public class Icon{
     internal void StartAnimation(Sprite[] spritesList){
 
         this.imageAnimation.textureArray=spritesList.ToList();
-        this.imageAnimation.AnimationSpeed=spritesList.Length;
+        this.imageAnimation.AnimationSpeed=spritesList.Length-10;
         this.imageAnimation.StartAnimation();
 
     }

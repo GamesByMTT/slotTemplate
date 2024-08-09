@@ -11,13 +11,13 @@ using UnityEngine.UI.Extensions;
 public class SlotView : MonoBehaviour
 {
     [Header("slots")]
-    [SerializeField] private Transform[] slots;
+    [SerializeField] internal Transform[] slots;
     [SerializeField] private GameObject IconPrefab;
     [SerializeField] private SpriteAtlas spriteAtlas;
     [SerializeField] private List<Reel> resultMatrix = new List<Reel>(3);
     [SerializeField] internal List<Icon> animatedIcons = new List<Icon>();
     [SerializeField] private SlotController slotController;
-    [SerializeField] private Vector2 iconSize;
+    [SerializeField] internal Vector2 iconSize;
     [SerializeField] private float spacing = 30;
     [SerializeField] private Vector2 slotMatrix;
 
@@ -45,11 +45,11 @@ public class SlotView : MonoBehaviour
     [SerializeField] private SpriteAtlas symbol12Atlas;
     [SerializeField] private SpriteAtlas symbol13Atlas;
     internal void PopulateReels()
-    {//TODO : CHane Naming Conventions
+    {
         clearLine();
 
 
-        for (int i = 0; i < 3; i++)
+        for (int i = 0; i < 15; i++)
         {
             PopulateRow(i);
         }
@@ -57,7 +57,7 @@ public class SlotView : MonoBehaviour
     }
 
     internal void PopulateReels(List<List<int>> iconsId)
-    {//TODO : CHane Naming Conventions
+    {
         clearLine();
 
 
@@ -92,12 +92,8 @@ public class SlotView : MonoBehaviour
     {
         for (int i = 0; i < slotMatrix.y; i++)
         {
-
-            // int id = int.Parse(Ids[i]);
             resultMatrix[(int)slotMatrix.x - 1 - index].reelIcons[i].image.sprite = spriteAtlas.GetSprite(Ids[i].ToString());
             resultMatrix[(int)slotMatrix.x - 1 - index].reelIcons[i].id = Ids[i];
-
-
         }
     }
 
@@ -115,7 +111,7 @@ public class SlotView : MonoBehaviour
             {
                 var points = new Vector2() { x = j * x_Distance, y = y_index[lineIndexs[i]][j] * -y_Distance };
                 pointlist.Add(points);
-            }//TODO : Make it Seperate
+            }
             line.Points = pointlist.ToArray();
         }
 
@@ -149,36 +145,12 @@ public class SlotView : MonoBehaviour
             string[] numbers = flatList[i].Split(',');
             var symbol = resultMatrix[int.Parse(numbers[1])].reelIcons[int.Parse(numbers[0])];
             int id = symbol.id;
-            // Sprite[] animations = GetSpriteList(id);
-            // Debug.Log("animation list "+animations.Length);
             symbol.StartAnimation(GetSpriteList(id));
             animatedIcons.Add(symbol);
         }
 
     }
 
-
-    // private Sprite[] GetSpriteList(int id)
-    // {
-    //     switch (id)
-    //     {
-    //         case 0: return symbol0SpriteList;
-    //         case 1: return symbol1SpriteList;
-    //         case 2: return symbol2SpriteList;
-    //         case 3: return symbol3SpriteList;
-    //         case 4: return symbol4SpriteList;
-    //         case 5: return symbol5SpriteList;
-    //         case 6: return symbol6SpriteList;
-    //         case 7: return symbol7SpriteList;
-    //         case 8: return symbol8SpriteList;
-    //         case 9: return symbol9SpriteList;
-    //         case 10: return symbol10SpriteList;
-    //         case 11: return symbol11SpriteList;
-    //         case 12: return symbol12SpriteList;
-    //         case 13: return symbol13SpriteList;
-    //         default: return new Sprite[0];
-    //     }
-    // }
 private Sprite[] GetSpriteList(int id)
 {
     SpriteAtlas atlas= new SpriteAtlas();

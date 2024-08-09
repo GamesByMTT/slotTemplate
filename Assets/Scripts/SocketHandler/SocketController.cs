@@ -16,9 +16,18 @@ public class SocketController : MonoBehaviour
 
     private Helper helper= new Helper();
 
+    private GameManager gameManager;
+
     // Start is called before the first frame update
+    void Start(){
+
+        
+
+    }
+
     internal void InitiateSocket(Action OnInit, Action OnSpin)
     {
+
         var TokenObj = new { token = authToken };
         var uri = new Uri(url);
 
@@ -64,7 +73,6 @@ public class SocketController : MonoBehaviour
         socket.OnAnyInUnityThread((name, response) =>
         {
             string modifiedResponse = response.GetValue<string>();
-            Debug.Log("on unity thread " + modifiedResponse);
 
 
             if (IsJSON(modifiedResponse))
@@ -82,18 +90,15 @@ public class SocketController : MonoBehaviour
 
 
             }
-            else
-            {
-                print("response boolean" + modifiedResponse);
-            }
+
 
         });
 
 
         socket.On("socketState", initReq);
+        socket.Connect();
 
         Debug.Log("Connecting...");
-        socket.Connect();
     }
 
     private void OnDisable()
@@ -152,6 +157,7 @@ public class SocketController : MonoBehaviour
 
     private void initReq(SocketIOResponse iOResponse)
     {
+        Debug.Log("called in init req");
         var obj = new { Data = new { GameID = "SL-VIK" }, id = "Auth" };
         string json = JsonConvert.SerializeObject(obj);
         socket.Emit("AUTH", json);
