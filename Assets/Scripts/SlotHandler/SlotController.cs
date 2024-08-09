@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 
@@ -20,9 +21,18 @@ public class SlotController : MonoBehaviour
         {
             slotView.GeneratePayLine(initGameData.Lines, socketController.socketModel.resultGameData.linesToEmit);
             slotView.PopulateIconAnimation(resultGameData.symbolsToEmit);
-
             return true;
         }
         return false;
+    }
+
+    internal void DepopulateAnimation()
+    {
+
+        for (int i = 0; i < slotView.animatedIcons.Count; i++)
+        {
+            slotView.animatedIcons[i].StopAnimation();
+        }
+        slotView.animatedIcons.Clear();
     }
 }

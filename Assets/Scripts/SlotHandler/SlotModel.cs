@@ -1,5 +1,7 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using UnityEngine;
 using UnityEngine.UI;
 
 [Serializable]
@@ -24,7 +26,15 @@ public class Icon{
         this.id=Id;
         this.imageAnimation=ImageAnimation;
     }
-     public void stopAnimation(){
+    
+    internal void StartAnimation(Sprite[] spritesList){
+
+        this.imageAnimation.textureArray=spritesList.ToList();
+        this.imageAnimation.AnimationSpeed=spritesList.Length;
+        this.imageAnimation.StartAnimation();
+
+    }
+     internal void StopAnimation(){
         this.imageAnimation.StopAnimation();
         this.imageAnimation.textureArray.Clear();
 

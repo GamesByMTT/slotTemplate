@@ -41,7 +41,7 @@ public class GameManager : MonoBehaviour
         string spinJson = JsonConvert.SerializeObject(spinData);
         socketController.SendData(spinJson);
         uIController.ToggleButtons(false);
-
+        slotController.DepopulateAnimation();
         if (autoSpinCount > 0)
         autoSpinCount --;
     }
