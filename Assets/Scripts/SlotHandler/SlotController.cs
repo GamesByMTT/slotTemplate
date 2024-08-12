@@ -3,9 +3,10 @@ using UnityEngine;
 using DG.Tweening;
 using System.Threading.Tasks;
 using System;
+using System.Collections;
 public class SlotController : MonoBehaviour
 {
-    [SerializeField] private SocketController socketController;
+
     [SerializeField] private SlotView slotView;
     [SerializeField] private int betIndex;
 
@@ -20,23 +21,45 @@ public class SlotController : MonoBehaviour
         //slot pos=slot transformheight/2+space
     }
 
-    internal bool  PopulateSLot(ResultGameData resultGameData, InitGameData initGameData)
+    internal  async Task<bool>  PopulateSlotAndCheckResult(ResultGameData resultGameData, InitGameData initGameData, Action<int> setAutoSpin)
     {
         slotView.PopulateReels(resultGameData.ResultReel);
-        StopSpinAnimation();
+        // bool isMatched=false;
+        // StartCoroutine(StopAnimationRoutine(resultGameData,initGameData,isMatched));
+        bool isMatched=false;
+
+        for (int i = 0; i < slotView.slots.Length; i++)
+        {
+            alltweens[i].Pause();
+            alltweens[i] = slotView.slots[i].DOLocalMoveY(-360 + 70 + 70, 0.5f).SetEase(Ease.OutElastic);
+            await Task.Delay(TimeSpan.FromSeconds(0.25f));
+
+        }
+        
         if (resultGameData.linesToEmit.Count > 0)
         {
-            slotView.GeneratePayLine(initGameData.Lines, socketController.socketModel.resultGameData.linesToEmit);
-            slotView.PopulateIconAnimation(resultGameData.symbolsToEmit);
-            return true;
+            slotView.GeneratePayLine(initGameData.Lines, resultGameData.linesToEmit);
+            isMatched=true;
         }
-        // KillAllTween();
-        return false;
+        if(resultGameData.symbolsToEmit.Count>0){
+            slotView.PopulateIconAnimation(resultGameData.symbolsToEmit);
+            isMatched=true;
+        }
+        if(resultGameData.freeSpins>0)
+        setAutoSpin((int)resultGameData.freeSpins);
+        // StopSpinAnimation(resultGameData,initGameData,(reult)=>isMatched=reult);
+
+        // if (resultGameData.linesToEmit.Count > 0)
+        // {
+        //     slotView.GeneratePayLine(initGameData.Lines, resultGameData.linesToEmit);
+        //     slotView.PopulateIconAnimation(resultGameData.symbolsToEmit);
+        //     return true;
+        // }
+    
+        return isMatched;
     }
 
-    internal void checkforWin(){
-        
-    }
+  
     internal void DepopulateAnimation()
     {
 
@@ -49,6 +72,9 @@ public class SlotController : MonoBehaviour
 
     internal void StartSpinAnimation()
     {
+        KillAllTween();
+        DepopulateAnimation();
+        slotView.clearLine();
         for (int i = 0; i < slotView.slots.Length; i++)
         {
             // slotTransform.localPosition = new Vector2(slotTransform.localPosition.x, 0);
@@ -60,18 +86,6 @@ public class SlotController : MonoBehaviour
 
     }
 
-    internal async void StopSpinAnimation()
-    {
-        // int tweenpos = (reqpos * slotView.iconSize.x) -  slotView.iconSize.x;
-        for (int i = 0; i < slotView.slots.Length; i++)
-        {
-            alltweens[i].Pause();
-            alltweens[i] = slotView.slots[i].DOLocalMoveY(-360 + 70 + 70, 0.5f).SetEase(Ease.OutElastic);
-            await Task.Delay(TimeSpan.FromSeconds(0.1f));
-
-        }        
-
-    }
 
     internal void KillAllTween()
     {

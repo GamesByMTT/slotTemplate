@@ -41,6 +41,7 @@ public class InitGameData
 [Serializable]
 public class ResultGameData
 {
+    public List<int> autoSpin { get; set; }
     public List<List<int>> ResultReel { get; set; }
     public List<int> linesToEmit { get; set; }
     public List<List<string>> symbolsToEmit { get; set; }
@@ -105,6 +106,8 @@ public class Symbol
     public object increaseValue { get; set; }
     public int freeSpin { get; set; }
 }
+
+
 
 
 

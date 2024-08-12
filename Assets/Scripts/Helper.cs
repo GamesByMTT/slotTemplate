@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
-
+using Newtonsoft.Json.Linq;
+using System;
 
 public class Helper
 {
@@ -28,5 +29,23 @@ public class Helper
         }
 
         return intLists;
+    }
+
+    internal  bool IsValidJson(string jsonString)
+    {
+        if (string.IsNullOrEmpty(jsonString))
+        {
+            return false;
+        }
+
+        try
+        {
+            JToken.Parse(jsonString);
+            return true;
+        }
+        catch (Exception)
+        {
+            return false;
+        }
     }
 }

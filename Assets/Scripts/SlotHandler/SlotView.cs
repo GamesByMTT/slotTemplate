@@ -80,7 +80,6 @@ public class SlotView : MonoBehaviour
             int id = UnityEngine.Random.Range(0, spriteAtlas.spriteCount);
             image.sprite = spriteAtlas.GetSprite(id.ToString());
             Icon icon = new Icon(image, id, imageAnimation);
-            Debug.Log("ICONS : " + i + "," + index);
             if (index < (int)slotMatrix.x)
                 resultMatrix[(int)slotMatrix.x - 1 - index].reelIcons.Add(icon);
             icon.image.transform.localPosition = new Vector3(0, (iconSize.y + spacing) * index, 0);
@@ -99,7 +98,8 @@ public class SlotView : MonoBehaviour
 
     internal void GeneratePayLine(List<List<int>> y_index, List<int> lineIndexs)
     {
-
+        Debug.Log("line list :"+JsonConvert.SerializeObject(y_index));
+        Debug.Log("line list :"+JsonConvert.SerializeObject(lineIndexs));
         for (int i = 0; i < lineIndexs.Count; i++)
         {
             GameObject lineObj = Instantiate(lineObject, lineCanvas);
@@ -118,7 +118,7 @@ public class SlotView : MonoBehaviour
     }
 
 
-    void clearLine()
+    internal void clearLine()
     {
         for (int i = 0; i < wininglines.Count; i++)
         {
@@ -145,7 +145,9 @@ public class SlotView : MonoBehaviour
             string[] numbers = flatList[i].Split(',');
             var symbol = resultMatrix[int.Parse(numbers[1])].reelIcons[int.Parse(numbers[0])];
             int id = symbol.id;
-            symbol.StartAnimation(GetSpriteList(id));
+            Sprite[] sprites=GetSpriteList(id);
+            Array.Sort(sprites, (sprite1, sprite2) => string.Compare(sprite1.name, sprite2.name));
+            symbol.StartAnimation(sprites);
             animatedIcons.Add(symbol);
         }
 
@@ -180,7 +182,6 @@ private Sprite[] GetSpriteList(int id)
 
     Sprite[] sprites = new Sprite[atlas.spriteCount];
     atlas.GetSprites(sprites);
-    Array.Sort(sprites, (sprite1, sprite2) => string.Compare(sprite1.name, sprite2.name));
     return sprites;
 }
 

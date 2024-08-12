@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en-us">
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  <title>Unity WebGL Player | {{{ PRODUCT_NAME }}}</title>
+  <style>
+    body,
+    html {
+      margin: 0;
+      padding: 0;
+      overflow: hidden;
+      height: 100%;
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background-color: black;
+    }
+
+    #unity-canvas {
+      height: 100%;
+      width: 100%;
+    }
+  </style>
+</head>
+
+<body>
+  <canvas id="unity-canvas" tabindex="-1"></canvas>
+  <script src="Build/{{{ LOADER_FILENAME }}}"></script>
+  <script>
+
+    function resizeCanvas() {
+      const canvas = document.querySelector("#unity-canvas");
+      const aspectRatio = 16 / 9; // Aspect ratio of the canvas
+      let windowWidth = window.innerWidth;
+      let windowHeight = window.innerHeight;
+
+      if (windowWidth < windowHeight) {
+        let canvasWidth = windowWidth;
+        let canvasHeight = canvasWidth / aspectRatio;
+
+        if (canvasHeight > windowHeight) {
+          canvasHeight = windowHeight;
+          canvasWidth = canvasHeight * aspectRatio;
+        }
+
+        canvas.width = canvasWidth;
+        canvas.height = canvasHeight;
+        canvas.style.width = `${canvasWidth}px`;
+        canvas.style.height = `${canvasHeight}px`;
+
+      } else {
+        canvas.width = windowWidth;
+        canvas.height = windowHeight;
+        canvas.style.width = '100%';
+        canvas.style.height = '100%';
+      }
+    }
+
+    let resizeTimeout;
+    window.addEventListener('resize', () => {
+      clearTimeout(resizeTimeout);
+      resizeTimeout = setTimeout(resizeCanvas, 100);
+    });
+
+    window.addEventListener('load', () => {
+      resizeCanvas();
+      createUnityInstance(document.querySelector("#unity-canvas"), {
+        dataUrl: "Build/{{{ DATA_FILENAME }}}",
+        frameworkUrl: "Build/{{{ FRAMEWORK_FILENAME }}}",
+        #if USE_THREADS
+          workerUrl: "Build/{{{ WORKER_FILENAME }}}",
+        #endif
+          #if USE_WASM
+          codeUrl: "Build/{{{ CODE_FILENAME }}}",
+        #endif
+          #if MEMORY_FILENAME
+          memoryUrl: "Build/{{{ MEMORY_FILENAME }}}",
+        #endif
+          #if SYMBOLS_FILENAME
+          symbolsUrl: "Build/{{{ SYMBOLS_FILENAME }}}",
+        #endif
+          streamingAssetsUrl: "StreamingAssets",
+        companyName: {{{ JSON.stringify(COMPANY_NAME) }}},
+      productName: {{{ JSON.stringify(PRODUCT_NAME) }}},
+      productVersion: {{{ JSON.stringify(PRODUCT_VERSION) }}},
+          // matchWebGLToCanvasSize: false, // Uncomment this to separately control WebGL canvas render size and DOM element size.
+          // devicePixelRatio: 1, // Uncomment this to override low DPI rendering on high DPI displays.
+        });
+      });
+  </script>
+</body>
+
+</html>
