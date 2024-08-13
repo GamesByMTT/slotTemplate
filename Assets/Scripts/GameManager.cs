@@ -122,7 +122,7 @@ public class GameManager : MonoBehaviour
 
         uIController.UpdatePlayerData(socketControllerv3.socketModel.PlayerData);
 
-        if (autoSpinCount > 0)
+        if (autoSpinCount > 0 || freeSpinsCount > 0)
         {
 
             Debug.Log("AutoSpinCount : " + autoSpinCount);
