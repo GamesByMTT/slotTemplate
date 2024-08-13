@@ -88,7 +88,7 @@ public class GameManager : MonoBehaviour
 
     void OnSpinStart()
     {
-        var spinData = new { data = new { currentBet = 0, currentLines = 20, spins = 1 }, id = "SPIN" };
+        var spinData = new { data = new { currentBet = socketControllerv3.socketModel.currentBetIndex , currentLines = 20, spins = 1 }, id = "SPIN" };
         string spinJson = JsonConvert.SerializeObject(spinData);
         Debug.Log("spin pressed");
         socketControllerv3.SendMessage("message", spinJson);
