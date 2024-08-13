@@ -21,42 +21,30 @@ public class SlotController : MonoBehaviour
         //slot pos=slot transformheight/2+space
     }
 
-    internal  async Task<bool>  PopulateSlotAndCheckResult(ResultGameData resultGameData, InitGameData initGameData, Action<int> setAutoSpin)
+    internal  IEnumerator  PopulateSlotAndCheckResult(ResultGameData resultGameData, InitGameData initGameData, Action<int> setFreeSpin,Action<bool> isMatched)
     {
         slotView.PopulateReels(resultGameData.ResultReel);
-        // bool isMatched=false;
-        // StartCoroutine(StopAnimationRoutine(resultGameData,initGameData,isMatched));
-        bool isMatched=false;
-
         for (int i = 0; i < slotView.slots.Length; i++)
         {
             alltweens[i].Pause();
             alltweens[i] = slotView.slots[i].DOLocalMoveY(-360 + 70 + 70, 0.5f).SetEase(Ease.OutElastic);
-            await Task.Delay(TimeSpan.FromSeconds(0.25f));
+            yield return new WaitForSeconds(0.25f);
 
         }
-        
+
         if (resultGameData.linesToEmit.Count > 0)
         {
             slotView.GeneratePayLine(initGameData.Lines, resultGameData.linesToEmit);
-            isMatched=true;
+            isMatched(true);
         }
         if(resultGameData.symbolsToEmit.Count>0){
             slotView.PopulateIconAnimation(resultGameData.symbolsToEmit);
-            isMatched=true;
+            isMatched(true);
+
         }
         if(resultGameData.freeSpins>0)
-        setAutoSpin((int)resultGameData.freeSpins);
-        // StopSpinAnimation(resultGameData,initGameData,(reult)=>isMatched=reult);
-
-        // if (resultGameData.linesToEmit.Count > 0)
-        // {
-        //     slotView.GeneratePayLine(initGameData.Lines, resultGameData.linesToEmit);
-        //     slotView.PopulateIconAnimation(resultGameData.symbolsToEmit);
-        //     return true;
-        // }
-    
-        return isMatched;
+        setFreeSpin((int)resultGameData.freeSpins);    
+        yield return null;
     }
 
   
@@ -70,6 +58,7 @@ public class SlotController : MonoBehaviour
         slotView.animatedIcons.Clear();
     }
 
+
     internal void StartSpinAnimation()
     {
         KillAllTween();
@@ -81,7 +70,6 @@ public class SlotController : MonoBehaviour
             Tweener tweener = slotView.slots[i].DOLocalMoveY(-1200 + 200, 0.075f).SetLoops(-1, LoopType.Restart).SetDelay(0).SetEase(Ease.InOutBounce);
             tweener.Play();
             alltweens.Add(tweener);
-            Debug.Log("sasas" + alltweens.Count);
         }
 
     }

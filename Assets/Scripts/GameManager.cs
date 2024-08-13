@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using UnityEngine;
 using Newtonsoft.Json;
 using System.Collections;
+using System.Text.RegularExpressions;
 public class GameManager : MonoBehaviour
 {
     // [SerializeField] private SocketController socketController;
@@ -10,18 +11,28 @@ public class GameManager : MonoBehaviour
     [SerializeField] private SocketControllerv3 socketControllerv3;
     [SerializeField] private SlotController slotController;
     [SerializeField] private UIController uIController;
-    [SerializeField] private int autoSpinCount = 5;
-
-
+    [SerializeField] private int autoSpinCount = 0;
+    [SerializeField] private int freeSpinsCount=0;
     [SerializeField] private float delayTime = 2f;
-    void Start()
+
+
+
+    private void Start()
     {
+
+        #if UNITY_EDITOR
+        StartGame(null);
+        #endif
+    }
+    internal void StartGame(string token)
+    {
+        Debug.Log("called to satrt game with token"+token);
         // Start the coroutine to manage the initiation
         // StartCoroutine(InitializeSocketCoroutine());
         // socketControllerv2.InitiateConnection();
-        socketControllerv3.InitiateSocket();
-        socketControllerv3.onInit=OnInit;
-        socketControllerv3.onSpin=OnSpinEnd;
+        socketControllerv3.InitiateSocket(token);
+        socketControllerv3.onInit = OnInit;
+        socketControllerv3.onSpin = OnSpinEnd;
         uIController.closeButton.onClick.AddListener(socketControllerv3.CloseSocket);
         // socketControllerv2.onInit=OnInit;
         // socketControllerv2.onSpin=OnSpinEnd;
@@ -36,36 +47,42 @@ public class GameManager : MonoBehaviour
     internal void OnInit()
     {
         // uIController.RemoveButtonListeners();
-        uIController.spinButton.onClick.AddListener(delegate {  OnSpinStart(); });
+        uIController.spinButton.onClick.AddListener(delegate { OnSpinStart(); });
 
 
-        uIController.lineBetButton.onClick.AddListener(delegate {
+        uIController.lineBetButton.onClick.AddListener(delegate
+        {
             uIController.UpdateBetLineInfo(socketControllerv3.socketModel.initGameData.Lines.Count, socketControllerv3.ChangeLineBet());
-        
-            });
 
-        uIController.autoSpinStop.onClick.AddListener(StopAutoSpin );
-        uIController.autoSpinButton.onClick.AddListener(delegate { 
-            autoSpinCount=int.Parse(uIController.autoSpinInputField.text);  
-            if(autoSpinCount>0){
-            OnSpinStart();
-                uIController.autoSpinButton.gameObject.SetActive(false); 
+        });
+
+        uIController.autoSpinStop.onClick.AddListener(StopAutoSpin);
+
+        uIController.autoSpinButton.onClick.AddListener(delegate
+        {
+            autoSpinCount = int.Parse(uIController.autoSpinInputField.text);
+            if (autoSpinCount > 0)
+            {
+                OnSpinStart();
+
+                uIController.autoSpinButton.gameObject.SetActive(false);
             }
-            });
+        });
 
         uIController.UpdateBetLineInfo(socketControllerv3.socketModel.initGameData.Lines.Count, socketControllerv3.socketModel.initGameData.Bets[0]);
         uIController.UpdatePlayerData(socketControllerv3.socketModel.PlayerData);
     }
 
-    void StopAutoSpin(){
-        autoSpinCount=0;
-        uIController.autoSpinStop.gameObject.SetActive(false);
+    void StopAutoSpin()
+    {
+        autoSpinCount = 0;
         uIController.autoSpinButton.gameObject.SetActive(true);
     }
-    private void Update() {
+    private void Update()
+    {
         if (Input.GetKeyDown(KeyCode.Space) && uIController.spinButton.interactable)
         {
-                OnSpinStart();
+            OnSpinStart();
         }
     }
 
@@ -74,20 +91,35 @@ public class GameManager : MonoBehaviour
         var spinData = new { data = new { currentBet = 0, currentLines = 20, spins = 1 }, id = "SPIN" };
         string spinJson = JsonConvert.SerializeObject(spinData);
         Debug.Log("spin pressed");
-        socketControllerv3.SendMessage("message",spinJson);
+        socketControllerv3.SendMessage("message", spinJson);
         uIController.ToggleButtons(false);
         slotController.StartSpinAnimation();
-        if (autoSpinCount > 0){
+        if (autoSpinCount > 0)
+        {
             autoSpinCount--;
-            uIController.autoSpinInputField.text=autoSpinCount.ToString();
+            uIController.autoSpinInputField.text = autoSpinCount.ToString();
+        }
+        if (freeSpinsCount > 0)
+        {
+            freeSpinsCount--;
         }
     }
 
-    internal async void OnSpinEnd()
+    internal void OnSpinEnd()
     {
-        Debug.Log("spin end.....");
-        await Task.Delay(TimeSpan.FromSeconds(1f));
-        bool isMatched = await slotController.PopulateSlotAndCheckResult(socketControllerv3.socketModel.resultGameData, socketControllerv3.socketModel.initGameData,(spins)=>autoSpinCount=spins);
+        StartCoroutine(SpinEndRoutine());
+    }
+
+    IEnumerator SpinEndRoutine(){
+        Debug.Log("spin end enter.....");
+        bool isMatched=false;
+
+        yield return slotController.PopulateSlotAndCheckResult(socketControllerv3.socketModel.resultGameData, 
+        socketControllerv3.socketModel.initGameData, 
+        (spins) => freeSpinsCount += spins,
+        (match)=>isMatched=match
+        );
+
         uIController.UpdatePlayerData(socketControllerv3.socketModel.PlayerData);
 
         if (autoSpinCount > 0)
@@ -96,19 +128,17 @@ public class GameManager : MonoBehaviour
             Debug.Log("AutoSpinCount : " + autoSpinCount);
             if (isMatched)
                 delayTime = 3f;
-
-            await Task.Delay(TimeSpan.FromSeconds(delayTime));
+            yield return new WaitForSeconds(delayTime);
             OnSpinStart();
             delayTime = 2f;
 
-            return;
+            yield break;
         }
 
         uIController.ToggleButtons(true);
+        Debug.Log("spin end exit.....");
 
-        // StartCoroutine(OnSpinEndRoutine());
     }
-
 
     // IEnumerator OnSpinEndRoutine(){
     //     yield return new WaitForSeconds(1f);
@@ -128,7 +158,7 @@ public class GameManager : MonoBehaviour
     //     }
 
     //     uIController.ToggleButtons(true);
-        
+
     // }
 
 

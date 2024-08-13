@@ -28,11 +28,18 @@
 
 <body>
   <canvas id="unity-canvas" tabindex="-1"></canvas>
-  <script src="Build/{{{ LOADER_FILENAME }}}"></script>
   <script>
+    const canvas=document.querySelector("#unity-canvas");
+    function getCookie(name) {
+      let value = "; " + document.cookie;
+      let parts = value.split("; " + name + "=");
+      if (parts.length === 2) return parts.pop().split(";").shift();
+      return null;
+    }
 
+    const token = getCookie('token');
+    console.log("token:",token);
     function resizeCanvas() {
-      const canvas = document.querySelector("#unity-canvas");
       const aspectRatio = 16 / 9; // Aspect ratio of the canvas
       let windowWidth = window.innerWidth;
       let windowHeight = window.innerHeight;
@@ -46,14 +53,14 @@
           canvasWidth = canvasHeight * aspectRatio;
         }
 
-        canvas.width = canvasWidth;
-        canvas.height = canvasHeight;
+        // canvas.width = canvasWidth;
+        // canvas.height = canvasHeight;
         canvas.style.width = `${canvasWidth}px`;
         canvas.style.height = `${canvasHeight}px`;
 
       } else {
-        canvas.width = windowWidth;
-        canvas.height = windowHeight;
+        // canvas.width = windowWidth;
+        // canvas.height = windowHeight;
         canvas.style.width = '100%';
         canvas.style.height = '100%';
       }
@@ -65,31 +72,51 @@
       resizeTimeout = setTimeout(resizeCanvas, 100);
     });
 
-    window.addEventListener('load', () => {
-      resizeCanvas();
-      createUnityInstance(document.querySelector("#unity-canvas"), {
-        dataUrl: "Build/{{{ DATA_FILENAME }}}",
-        frameworkUrl: "Build/{{{ FRAMEWORK_FILENAME }}}",
-        #if USE_THREADS
-          workerUrl: "Build/{{{ WORKER_FILENAME }}}",
-        #endif
-          #if USE_WASM
-          codeUrl: "Build/{{{ CODE_FILENAME }}}",
-        #endif
-          #if MEMORY_FILENAME
-          memoryUrl: "Build/{{{ MEMORY_FILENAME }}}",
-        #endif
-          #if SYMBOLS_FILENAME
-          symbolsUrl: "Build/{{{ SYMBOLS_FILENAME }}}",
-        #endif
-          streamingAssetsUrl: "StreamingAssets",
+    var buildUrl = "Build";
+      var loaderUrl = buildUrl + "/{{{ LOADER_FILENAME }}}";
+      var config = {
+        dataUrl: buildUrl + "/{{{ DATA_FILENAME }}}",
+        frameworkUrl: buildUrl + "/{{{ FRAMEWORK_FILENAME }}}",
+#if USE_THREADS
+        workerUrl: buildUrl + "/{{{ WORKER_FILENAME }}}",
+#endif
+#if USE_WASM
+        codeUrl: buildUrl + "/{{{ CODE_FILENAME }}}",
+#endif
+#if MEMORY_FILENAME
+        memoryUrl: buildUrl + "/{{{ MEMORY_FILENAME }}}",
+#endif
+#if SYMBOLS_FILENAME
+        symbolsUrl: buildUrl + "/{{{ SYMBOLS_FILENAME }}}",
+#endif
+        streamingAssetsUrl: "StreamingAssets",
         companyName: {{{ JSON.stringify(COMPANY_NAME) }}},
-      productName: {{{ JSON.stringify(PRODUCT_NAME) }}},
-      productVersion: {{{ JSON.stringify(PRODUCT_VERSION) }}},
-          // matchWebGLToCanvasSize: false, // Uncomment this to separately control WebGL canvas render size and DOM element size.
-          // devicePixelRatio: 1, // Uncomment this to override low DPI rendering on high DPI displays.
-        });
-      });
+        productName: {{{ JSON.stringify(PRODUCT_NAME) }}},
+        productVersion: {{{ JSON.stringify(PRODUCT_VERSION) }}},
+      };
+
+        
+        var script = document.createElement("script");
+        script.src = loaderUrl;
+        script.onload = () => {
+          createUnityInstance(canvas, config, (progress) => {
+          }).then((unityInstance) => {
+            console.log("Unity instance created with token:",token);
+
+            // unityInstance.SetFullscreen(1);
+            canvas.requestFullscreen(1);
+            if(unityInstance){
+              unityInstance.SendMessage("GameManager", "StartGame", token);
+              console.log("Unity instance created with token:",token);
+            }
+            
+          }).catch((message) => {
+            alert(message);
+          });
+        };
+        
+        document.body.appendChild(script);
+        window.addEventListener('load', resizeCanvas());
   </script>
 </body>
 

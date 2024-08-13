@@ -143,6 +143,15 @@ public class SlotView : MonoBehaviour
         for (int i = 0; i < flatList.Count; i++)
         {
             string[] numbers = flatList[i].Split(',');
+            // try
+            // {
+                
+            // }
+            // catch (Exception ex)
+            // {
+                
+            //     throw;
+            // }
             var symbol = resultMatrix[int.Parse(numbers[1])].reelIcons[int.Parse(numbers[0])];
             int id = symbol.id;
             Sprite[] sprites=GetSpriteList(id);

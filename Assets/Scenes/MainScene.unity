@@ -187,7 +187,7 @@ MonoBehaviour:
     m_HighlightedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
     m_PressedColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 1}
     m_SelectedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
-    m_DisabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.5019608}
+    m_DisabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 1}
     m_ColorMultiplier: 1
     m_FadeDuration: 0.1
   m_SpriteState:
@@ -729,7 +729,6 @@ GameObject:
   m_Component:
   - component: {fileID: 350191031}
   - component: {fileID: 350191029}
-  - component: {fileID: 350191032}
   m_Layer: 0
   m_Name: SocketControllerV3
   m_TagString: Untagged
@@ -749,7 +748,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: de221459da13c4356bc20e9374863a51, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  jsHandler: {fileID: 350191032}
   SocketURI: https://jztxjn23-5000.inc1.devtunnels.ms/
   authToken: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2Yjc1YWE0N2EyZWEwYTUxNDdkOTQwMSIsInVzZXJuYW1lIjoic2F5YW4iLCJyb2xlIjoicGxheWVyIiwiaWF0IjoxNzIzNDM0MTQ0LCJleHAiOjE3MjQwMzg5NDR9.YFDRqgRBdgf6xo_PDxrADUHQ0Wq55bFlQvNpys1eMcE
 --- !u!4 &350191031
@@ -767,18 +765,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &350191032
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 350191028}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b100e562fbc0a4665b97ea889f869631, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &376045318
 GameObject:
   m_ObjectHideFlags: 0
@@ -1919,7 +1905,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 2147483647
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &806849016
 RectTransform:
   m_ObjectHideFlags: 0

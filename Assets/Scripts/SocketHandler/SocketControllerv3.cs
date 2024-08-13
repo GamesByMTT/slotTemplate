@@ -14,10 +14,7 @@ public class SocketControllerv3 : MonoBehaviour
     // [SerializeField] internal JSHandler _jsManager;
 
     // [SerializeField] private string SocketURI = "https://dev.casinoparadize.com";
-    [DllImport("__Internal")]
-    private static extern IntPtr GetAuthToken(string cookieName);
 
-    [SerializeField] private JSHandler jsHandler;
     [SerializeField] private string SocketURI = "https://jztxjn23-5000.inc1.devtunnels.ms/";
     internal SocketModel socketModel = new SocketModel();
     internal Action onInit;
@@ -46,57 +43,24 @@ public class SocketControllerv3 : MonoBehaviour
         // OpenSocket();
     }
 
-    void ReceiveAuthToken(string authToken)
-    {
-        Debug.Log("Received authToken: " + authToken);
-        // Do something with the authToken
-        myAuth = authToken;
-    }
 
 
-    internal void InitiateSocket()
+    internal void InitiateSocket(string token)
     {
 
-
+        Debug.Log("Called");
         SocketOptions options = new SocketOptions();
         options.ReconnectionAttempts = maxReconnectionAttempts;
         options.ReconnectionDelay = reconnectionDelay;
         options.Reconnection = true;
         Application.ExternalCall("window.parent.postMessage", "authToken", "*");
 
+
+        if(token!=null){
+            authToken=token;
+        }
+
         // SetupSocketManager(options);
-
-#if UNITY_WEBGL && !UNITY_EDITOR
-        jsHandler.RetrieveAuthToken("token", authToken =>
-        {
-            if (!string.IsNullOrEmpty(authToken))
-            {
-                Debug.Log("Auth token is " + authToken);
-                Func<SocketManager, Socket, object> authFunction = (manager, socket) =>
-                {
-                    return new
-                    {
-                        token = authToken
-                    };
-                };
-                options.Auth = authFunction;
-                // Proceed with connecting to the server
-                SetupSocketManager(options);
-            }
-            else
-            {
-                Application.ExternalEval(@"
-                window.addEventListener('message', function(event) {
-                    if (event.data.type === 'authToken') {
-                        // Send the message to Unity
-                        SendMessage('SocketControllerV3', 'ReceiveAuthToken', event.data.cookie);
-                    }});");
-
-                // Start coroutine to wait for the auth token
-                StartCoroutine(WaitForAuthToken(options));
-            }
-        });
-#else
         Func<SocketManager, Socket, object> authFunction = (manager, socket) =>
         {
             return new
@@ -107,7 +71,7 @@ public class SocketControllerv3 : MonoBehaviour
         options.Auth = authFunction;
         // Proceed with connecting to the server
         SetupSocketManager(options);
-#endif
+
     }
 
     private IEnumerator WaitForAuthToken(SocketOptions options)
@@ -118,7 +82,7 @@ public class SocketControllerv3 : MonoBehaviour
         //     yield return null;
         // }
 
-        yield return new WaitUntil(()=>myAuth!=null);
+        yield return new WaitUntil(() => myAuth != null);
         Debug.Log("My Auth is not null");
         Func<SocketManager, Socket, object> authFunction = (manager, socket) =>
         {
@@ -235,7 +199,7 @@ public class SocketControllerv3 : MonoBehaviour
     internal void CloseSocket()
     {
         SendMessage("EXIT");
-        DOVirtual.DelayedCall(0.1f, () =>   
+        DOVirtual.DelayedCall(0.1f, () =>
         {
             if (this.manager != null)
             {
